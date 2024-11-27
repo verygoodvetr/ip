@@ -10,7 +10,7 @@ export default function handler(req, res) {
   fs.appendFileSync(logFilePath, `IP: ${ipAddress}\n`);
 
   // Redirect to the target URL
-  const redirectUrl = "https://example.com"; // Replace with your target URL
+  const redirectUrl = "https://youtube.com"; // Replace with your target URL
   res.writeHead(302, { Location: redirectUrl });
   res.end();
 }
