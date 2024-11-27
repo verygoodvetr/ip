@@ -1,16 +1,16 @@
-const fs = require("fs");
-const path = require("path");
+// A temporary in-memory storage for logged IPs
+const loggedIPs = [];
 
 export default function handler(req, res) {
-  const ipAddress =
-    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  const logFilePath = path.join(process.cwd(), "ip_log.txt");
+  // Get the user's IP address
+  const ipAddress = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
   // Log the IP address
-  fs.appendFileSync(logFilePath, `IP: ${ipAddress}\n`);
+  loggedIPs.push({ ip: ipAddress, timestamp: new Date() });
 
-  // Redirect to the target URL
-  const redirectUrl = "https://youtube.com"; // Replace with your target URL
-  res.writeHead(302, { Location: redirectUrl });
+  console.log("Logged IPs:", loggedIPs); // Log to console for debugging
+
+  // Redirect to another URL
+  res.writeHead(302, { Location: "https://example.com" }); // Replace with your redirect URL
   res.end();
 }
