@@ -4,6 +4,10 @@ export default function handler(req, res) {
   const ipAddress =
     req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
+  if (!ipAddress) {
+    return res.status(400).json({ error: "IP address not found" });
+  }
+
   // Your Discord webhook URL
   const discordWebhookUrl = "https://discord.com/api/webhooks/1311415884891291809/0tHSM1M2TifTbnfKRjzCJyZxK22CvrRYvSRiE2Ddr7tsnjQQWHCEaXY12KR4gLaNL757"; 
 
@@ -23,6 +27,6 @@ export default function handler(req, res) {
     })
     .catch((error) => {
       console.error("Error sending to Discord webhook:", error);
-      res.status(500).send("Internal Server Error");
+      res.status(500).json({ error: "Failed to send to Discord webhook" });
     });
 }
